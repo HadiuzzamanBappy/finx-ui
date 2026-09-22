@@ -7,40 +7,37 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { clearInitLoginCookie } from "./actions";
 
-export function LoginForm() {
+export function ChangePassword() {
   const router = useRouter();
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [oldPassword, setOldPassword] = React.useState("");
+  const [newPassword, setNewPassword] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (newPassword !== confirmPassword) {
+      setError("New passwords do not match.");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+      // TODO: Here we will eventually send the password change request.
+      // await fetch("/api/proxy", { ... })
 
-      const data = await res.json().catch(() => ({}));
-      
-      if (!res.ok) {
-        throw new Error(
-          data.error || data.message || "Login failed. Please check your credentials.",
-        );
-      }
+      // TODO: Replace this simulated network request once the API is ready.
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      if (data.user?.initLogin) {
-        router.push("/change-password");
-      } else {
-        router.push("/");
-      }
-      
+      await clearInitLoginCookie();
+
+      router.push("/");
       router.refresh();
     } catch (err: any) {
       setError(err.message);
@@ -58,38 +55,55 @@ export function LoginForm() {
       )}
       <div className="space-y-2">
         <Label
-          htmlFor="username"
+          htmlFor="oldPassword"
           className="text-[13px] font-semibold text-foreground"
         >
-          Username
+          Current Password
         </Label>
         <Input
-          id="username"
-          type="text"
-          placeholder="e.g. TELLER01"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          id="oldPassword"
+          type="password"
+          value={oldPassword}
+          onChange={(e) => setOldPassword(e.target.value)}
           required
           disabled={loading}
-          autoComplete="username"
+          autoComplete="current-password"
           className="h-11"
         />
       </div>
       <div className="space-y-2">
         <Label
-          htmlFor="password"
+          htmlFor="newPassword"
           className="text-[13px] font-semibold text-foreground"
         >
-          Password
+          New Password
         </Label>
         <Input
-          id="password"
+          id="newPassword"
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
           required
           disabled={loading}
-          autoComplete="current-password"
+          autoComplete="new-password"
+          className="h-11"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label
+          htmlFor="confirmPassword"
+          className="text-[13px] font-semibold text-foreground"
+        >
+          Confirm New Password
+        </Label>
+        <Input
+          id="confirmPassword"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+          disabled={loading}
+          autoComplete="new-password"
           className="h-11"
         />
       </div>
@@ -101,10 +115,10 @@ export function LoginForm() {
         {loading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Authenticating...
+            Updating...
           </>
         ) : (
-          "Sign on"
+          "Update Password"
         )}
       </Button>
     </form>

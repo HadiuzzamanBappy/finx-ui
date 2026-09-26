@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import {
-  DEV_NAV_GROUPS,
   DocHeader,
   DocSearchDialog,
   DocSidebar,
+  MANUAL_NAV_GROUPS,
 } from "@/features/docs";
 
-export default function DevDocLayout({
+export default function ManualLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -30,11 +30,11 @@ export default function DevDocLayout({
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-background text-foreground antialiased">
-      {/* Fixed Left Sidebar */}
+      {/* Fixed Left Sidebar for User Manual */}
       <DocSidebar
-        portalTitle="CBS - Developer"
-        portalHomeHref="/devs"
-        navGroups={DEV_NAV_GROUPS}
+        portalTitle="CBS - User Manual"
+        portalHomeHref="/manual"
+        navGroups={MANUAL_NAV_GROUPS}
       />
 
       {/* Main Container Right (Top Header + Scrollable Content) */}
@@ -52,7 +52,7 @@ export default function DevDocLayout({
       <DocSearchDialog
         open={searchOpen}
         onOpenChange={setSearchOpen}
-        navGroups={DEV_NAV_GROUPS}
+        navGroups={MANUAL_NAV_GROUPS}
       />
     </div>
   );

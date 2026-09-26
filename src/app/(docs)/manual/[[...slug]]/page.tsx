@@ -7,7 +7,7 @@ import { readDocFile } from "@/features/docs/utils/doc-file-reader";
 
 export const dynamic = "force-dynamic";
 
-export default async function DevDocPage({
+export default async function ManualPage({
   params,
 }: {
   params: Promise<{ slug?: string[] }>;
@@ -17,7 +17,7 @@ export default async function DevDocPage({
     relativePath,
     content: fileContent,
     exists,
-  } = readDocFile(slug, "devs");
+  } = readDocFile(slug, "manual");
 
   if (!exists) {
     notFound();
@@ -28,10 +28,12 @@ export default async function DevDocPage({
       {/* File Breadcrumb Badge */}
       <div className="flex items-center justify-between border-b pb-4 text-xs text-muted-foreground font-mono">
         <div className="flex items-center gap-2">
-          <span className="text-primary font-semibold">devs/</span>
+          <span className="text-primary font-semibold">manual/</span>
           <span>{relativePath}</span>
         </div>
-        <span className="text-muted-foreground/60">Markdown Render Engine</span>
+        <span className="text-muted-foreground/60">
+          Officer Operating Manual
+        </span>
       </div>
 
       {/* Beautiful Rich Markdown Container */}
@@ -143,13 +145,13 @@ export default async function DevDocPage({
                 );
               }
 
-              if (targetHref.includes("docs/")) {
+              if (targetHref.includes("manual/")) {
                 const cleanPath = targetHref
-                  .split("docs/")[1]
+                  .split("manual/")[1]
                   ?.replace(/\.md$/, "");
-                targetHref = `/devs/${cleanPath}`;
+                targetHref = `/manual/${cleanPath}`;
               } else {
-                targetHref = `/devs/${targetHref.replace(/\.md$/, "")}`;
+                targetHref = `/manual/${targetHref.replace(/\.md$/, "")}`;
               }
 
               return (
